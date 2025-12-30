@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - APIRickandMortyProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/APIRickandMortyProject.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand mx-auto fw-bold text-success" style="font-weight:900" asp-controller="RickandMorty" asp-action="Index">Rick & Morty</a>
+
+                <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+                    <ul class="navbar-nav">
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="RickandMorty" asp-action="Index">Characters</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="RickandMorty" asp-action="Index2">Episodes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="RickandMorty" asp-action="Favorites">Favorite Characters</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - APIRickandMortyProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <style>
+
+        body{
+            background: linear-gradient(135deg, #f5e1ff, #e0c3fc);
+
+        }
+
+        .navbar-nav .nav-link{
+            color: forestgreen !important;
+            font-size:1.1rem;
+            font-weight:600;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+
+        .navbar-nav .nav-link:hover{
+            color:gray !important;
+               
+        }
+
+    </style>
+
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

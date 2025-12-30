@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "Favorites";
+}
+@model List<Result>
+<style>
+.button-style{
+
+    background-color:pink;
+    font-weight:400;
+    border:none;
+    color:white;
+}
+
+.button-style:hover{
+            background: linear-gradient(90deg, #9333ea, #a855f7);
+            transform: scale(1.03);
+}
+</style>
+<h2>⭐ Favorite Characters</h2>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <img src="@item.image" class="card-img-top" alt="@item.name" />
+                <div class="card-body text-center">
+                    <h5>@item.name</h5>
+                    <a asp-action="CharDetailPage" asp-route-id="@item.id" class="button-style btn w-100">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

@@ -1,0 +1,196 @@
+﻿@model Root
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f5e1ff, #e0c3fc);
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        padding-top: 20px;
+    }
+
+    .card-gradient-1 {
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    }
+
+    .card-gradient-2 {
+        background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    }
+
+    .card-gradient-3 {
+        background: linear-gradient(135deg, #fccb90, #d57eeb);
+    }
+
+    .card-gradient-4 {
+        background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+    }
+
+    .card-gradient-5 {
+        background: linear-gradient(135deg, #f6d365, #fda085);
+    }
+
+    .card {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #000;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .card img {
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            object-fit: cover;
+        }
+
+    .card-title {
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .label-bold {
+        font-weight: 700;
+    }
+
+    .btn-episodes {
+        background: linear-gradient(90deg, #a855f7, #c084fc);
+        border: none;
+        color: white;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: 0.3s ease;
+    }
+
+        .btn-episodes:hover {
+            background: linear-gradient(90deg, #9333ea, #a855f7);
+            transform: scale(1.03);
+        }
+
+    .btn-fav {
+        background: #FFD700;
+        border: none;
+        color: #000;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: 0.3s ease;
+        margin-bottom: 10px;
+    }
+
+        .btn-fav:hover {
+            background: #FFC107;
+            transform: scale(1.05);
+        }
+
+    .list-group-item {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #000;
+        border: none;
+        font-size: 0.9rem;
+    }
+
+        .list-group-item + .list-group-item {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+</style>
+
+<div class="container py-4">
+    <div class="row align-items-start">
+        @{
+            var gradientClasses = new List<string> { "card-gradient-1", "card-gradient-2", "card-gradient-3", "card-gradient-4", "card-gradient-5" };
+            int index = 0;
+        }
+
+        @foreach (var item in Model.results)
+        {
+            var cssClass = gradientClasses[index % gradientClasses.Count];
+            index++;
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm @cssClass">
+
+                 
+
+                    <img src="@item.image" class="card-img-top" alt="@item.name" height="250" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.name</h5>
+                        <hr />
+                        <p><span class="label-bold">Status:</span> @item.status</p>
+                        <p><span class="label-bold">Gender:</span> @item.gender</p>
+                        <p><span class="label-bold">Species:</span> @item.species</p>
+                        <p><span class="label-bold">Origin:</span> @item.origin.name</p>
+                        <p><span class="label-bold">Location:</span> @item.location.name</p>
+                        <p><span class="label-bold">Created:</span> @item.created</p>
+
+
+                        <button type="button" class="btn btn-fav w-100" data-id="@item.id">Add to Favorites</button>
+
+                        <button class="btn btn-episodes w-100 mt-2"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#epId-@item.id"
+                                aria-expanded="false"
+                                aria-controls="epId-@item.id">
+                            🎬 Episodes
+                        </button>
+
+                        <div class="collapse mt-2" id="epId-@item.id">
+                            <ul class="list-group list-group-flush rounded">
+                                @foreach (var ep in item.EpisodeDetails)
+                                {
+                                    <li class="list-group-item">@ep.name (@ep.episode)</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".btn-fav").click(function () {
+                var $btn = $(this);
+                var charId = $btn.data("id");
+
+                $btn.prop("disabled", true).text("Processing...");
+
+                $.post("/RickandMorty/ToggleFavorites", { id: charId })
+                    .done(function (response) {
+                        if (response.success) {
+                            if (response.action === "added") {
+                                $btn.text("Added ✓")
+                                    .removeClass("btn-fav btn-warning")
+                                    .addClass("btn-success");
+                            } else if (response.action === "removed") {
+                                $btn.text("Add to Favorites")
+                                    .removeClass("btn-success")
+                                    .addClass("btn-fav btn-warning");
+                            }
+
+                            if (response.count > 10) {
+                                alert("You cannot add more than 10 characters to favorites!");
+                            }
+                        } else {
+                            alert("An error occurred.");
+                        }
+                        $btn.prop("disabled", false);
+                    })
+                    .fail(function () {
+                        alert("An error occurred. Please try again.");
+                        $btn.prop("disabled", false).text("Add to Favorites");
+                    });
+            });
+        });
+    </script>
+}

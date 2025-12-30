@@ -1,0 +1,149 @@
+﻿@model EpisodeRoot
+@{
+    ViewData["Title"] = "Index2";
+}
+
+<style>
+
+    .bold-style{
+        font-weight: 700;
+    }
+
+    .card-color1
+    {
+        background-color: mediumvioletred;
+    }
+    .card-color2
+    {
+        background-color: cyan;
+    }
+    .card-color3
+    {
+        background-color: burlywood;
+    }
+
+    .card-color4
+    {
+        background-color: darkorchid;
+    }
+
+    .card {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #000;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+     .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+
+    .card-title{
+        font-weight:600;
+        text-align:center;
+    }
+
+    hr{
+        border-color: rgba(0,0,0,0.2);
+    }
+    .btn-chars{
+        background: linear-gradient(90deg, #a855f7, #c084fc);
+        border:none;
+        color:white;
+        font-weight:500;
+        border-radius:8px;
+        transition: 0.3s ease;
+    }
+
+
+    .btn-chars.hover{
+        background: linear-gradient(90deg, #9333ea, #a855f7);
+        transform: scale(1.03);
+
+    }
+
+
+    .list-group-item{
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #000;
+        border: none;
+        font-size: 0.9rem;
+    }
+
+
+    .list-group-item+.list-group-item{
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .arrow {
+        transition: transform 0.3s ease;
+    }
+</style>
+@{
+    var colorsClass = new List<string> { "card-color1", "card-color2", "card-color3", "card-color4" };
+    int number = 0;
+}
+
+<div class="container">
+    <div class="row">
+    @foreach (var item in Model.results)
+    {
+         var cssClass = colorsClass[number % colorsClass.Count];
+         number++;
+         <div class="col-md-3 mb-4">
+       
+        <div class="card @cssClass ">
+        <h2 class="card-title">@item.name</h2>
+        <hr/>
+
+         <p><span class="bold-style">Air Date=</span>@item.air_date</p>
+
+         <p><span class="bold-style">Episode:</span>@item.episode</p>
+
+
+
+         <p><span class="bold-style">Created:</span>@item.episode</p>
+
+            
+
+        <button data-bs-toggle="collapse" class="btn-chars"
+            data-bs-target="#epId-@item.id">
+                        <p>Characters <span class="arrow">▼</span></p>
+
+        </button>
+
+        <div class="collapse" id="epId-@item.id">
+        
+        <ul>
+            @foreach (var character in item.charDetails)
+            {
+                <li>
+                       <a class="list-group-item" asp-action="CharDetailPage"  asp-route-id="@character.id">@character.name</a>
+                       <img src="@character.image"  width="50px"/>
+                </li>
+             }
+
+
+        </ul>
+        </div>
+
+        </div>
+
+      </div>
+    }
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
